@@ -24,10 +24,13 @@ print(tags.shape[0])
 
 print(";;;;;;;;;;")
 
-movieId = 325
+movieId = 2
 
 # Make a histogram of the ratings for the movie with movieId
 #graphScoresForOneMovie(movieId, ratings, movies.iloc[movieId-1, 1])
+
+# Make a panda structure ordering all the movies from most reviewed to least reviewed
+#print(rateMoviePolpularityViews(ratings, movies))
 
 numOfUsers = ratings.iloc[-1, 0]
 print("num of users = ", numOfUsers)
@@ -38,8 +41,9 @@ print("num of ratings for movie = ", numOfRatings)
 # print(userRating.iloc[:, 2].to_numpy())
 
 averageRating = userRating['rating'].mean()
+print("movieId = ", movieId)
 print("average rating = ", averageRating)
 # print("again = ", np.mean(userRating.iloc[:, 2].to_numpy()))
 
-
+rateMoviePolpularityRating(ratings, movies)
 
