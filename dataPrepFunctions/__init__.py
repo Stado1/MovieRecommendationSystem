@@ -2,4 +2,5 @@
 
 from .graphScore import graphScoresForOneMovie
 from .moviePopularity import rateMoviePolpularityRating, rateMoviePolpularityViews
-
+from .mergeDatasets import MergeMoviesAndRatings
+from .removeSparseData import removeSparseData

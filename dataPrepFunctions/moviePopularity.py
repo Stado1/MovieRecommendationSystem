@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
+# returns a panda dataframe with movie names and average ratings of each movie
+# ordered from best rated to worst rated
 def rateMoviePolpularityRating(ratings, movies):
 
     # find the average rating of each movie
@@ -14,7 +15,7 @@ def rateMoviePolpularityRating(ratings, movies):
 
     # count the amount of reviews of each movie, stores it in a panda structure
     ratingCounts = ratings.groupby("movieId").size()
-    ratingCounts = ratingCounts.reset_index(name="ratingCount")
+    ratingCounts = ratingCounts.reset_index(name="amountOfRatings")
 
     #merge
     ratingAverages = ratingAverages.merge(ratingCounts, on="movieId")
@@ -28,17 +29,17 @@ def rateMoviePolpularityRating(ratings, movies):
     # sort based on average rating
     movieRatingAverages = movieRatingAverages.sort_values(by="ratingAverage", ascending=False)
 
-    print(movieRatingAverages)
 
-    return 0
-
+    return movieRatingAverages
 
 
+# returns a panda dataframe with movie names and average ratings of each movie
+# ordered from most amount of ratings to least amount of ratings
 def rateMoviePolpularityViews(ratings, movies):
 
     # count the amount of reviews of each movie, stores it in a panda structure
     ratingCounts = ratings.groupby("movieId").size()
-    ratingCounts = ratingCounts.reset_index(name="ratingCount")
+    ratingCounts = ratingCounts.reset_index(name="amountOfRatings")
 
     # find the average rating of each movie
     ratingGroups = ratings.groupby("movieId")
@@ -55,7 +56,7 @@ def rateMoviePolpularityViews(ratings, movies):
     movieRatingCounts = movieRatingCounts.drop(columns=["genres"])
 
      # sort based on amount of reviews
-    movieRatingCounts = movieRatingCounts.sort_values(by="ratingCount", ascending=False)
+    movieRatingCounts = movieRatingCounts.sort_values(by="amountOfRatings", ascending=False)
 
 
     return movieRatingCounts
