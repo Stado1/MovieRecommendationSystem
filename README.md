@@ -65,6 +65,7 @@ The Results for neural networks with an embedding vector size of 64 are:
 
 ## Discussion and Future Research
 What can be seen in the tables is that there is not a lot of variation between the different neural networks and the embedding vector size. This is probably because a simple neural network is good enough to find all the connections between users and their tastes in movies. A more complex neural network would just find patterns in noise, which is why a smaller embedding vector with a simpler neural network performs slightly better.
+This dataset has an average rating of 3.53 and a standard deviation of 1.12. By guessing the average rating, the RMSE would be 1.12. So each neural network outperforms just guessing. 
 
 A possible way to improve the system is to feed more data into the neural network, information like movie genres and movie tags can be useful for making predictions.
 
