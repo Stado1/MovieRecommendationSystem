@@ -1,17 +1,10 @@
 #!/usr/bin/env python3
 
-#import libraries
 import pandas as pd
 import sklearn
 import torch
 import numpy as np
 import math
-
-# import torch.nn as nn
-# import torch.optim as optim
-# from torch.utils.data import DataLoader, TensorDataset
-# from sklearn.model_selection import train_test_split
-# from sklearn.metrics import mean_squared_error
 
 #import functions from other python files
 from dataPrepFunctions import graphScoresForOneMovie
@@ -38,44 +31,33 @@ print("amount of duplicate ratings:", duplicatesRatings)
 duplicateMovies = movies.duplicated(subset=["movieId"]).sum()
 print("amount of duplicate movies:", duplicateMovies)
 
-print(";;;;;;;;;;")
 
 movieId = 2
-
-user_movie_matrix = ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
-print(type(user_movie_matrix))
-
 # Make a histogram of the ratings for the movie with movieId
-#graphScoresForOneMovie(movieId, ratings, movies.iloc[movieId-1, 1])
+graphScoresForOneMovie(movieId, ratings, movies.iloc[movieId-1, 1])
+print("Saved image of histogram of the ratings for the movie with movieId = ", movieId)
 
-# Make a panda structure ordering all the movies from most reviewed to least reviewed
-#print(rateMoviePolpularityViews(ratings, movies))
+# Make a panda dataframe ordering all the movies from most reviewed to least reviewed
+print("----------------------")
+print("Panda dataframe ordering all the movies from most reviewed to least reviewed:   ")
+print(rateMoviePolpularityViews(ratings, movies))
 
-# Make a panda structure ordering all the movies from best average review to worst average review
-#print(rateMoviePolpularityViews(ratings, movies))
+# Make a panda dataframe ordering all the movies from best average review to worst average review
+print("----------------------")
+print("Panda dataframe ordering all the movies from best average review to worst average review: ")
+print(rateMoviePolpularityViews(ratings, movies))
 
-# numOfUsers = ratings.iloc[-1, 0]
-# print("num of users = ", numOfUsers)
-#
-# userRating = ratings[ratings['movieId'] == movieId]
-# numOfRatings = userRating.shape[0]
-# print("num of ratings for movie = ", numOfRatings)
-# # print(userRating.iloc[:, 2].to_numpy())
-#
-# averageRating = userRating['rating'].mean()
-# print("movieId = ", movieId)
-# print("average rating = ", averageRating)
-# # print("again = ", np.mean(userRating.iloc[:, 2].to_numpy()))
-
-
-
-
+# merge movies and the ratings dataframes
 dataSet = MergeMoviesAndRatings(movies, ratings)
+
+# remove movies from dataset that have less than 5 raings
+print("----------------------")
+print("remove movies from dataset that have less than 5 raings: ")
 dataSet = removeSparseData(dataSet)
 
-print("***************************")
-print("***************************")
-print("NN time!")
+# train the neural network
+print("----------------------")
+print("Start training neural network:")
 recommendNN(dataSet)
 
 

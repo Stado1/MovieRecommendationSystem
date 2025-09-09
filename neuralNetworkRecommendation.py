@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-#import libraries
 import pandas as pd
 import sklearn
 import torch
@@ -13,6 +12,7 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
+# The neural network that is used
 class RatingPredictionNN(nn.Module):
     def __init__(self, userAmount, movieAmount, embeddingVectorSize):
         super(RatingPredictionNN, self).__init__()
@@ -43,6 +43,7 @@ class RatingPredictionNN(nn.Module):
         x = self.fc4(x)
         return x
 
+# class used for early stopping
 class EarlyStopping:
     def __init__(self, patience=5, min_delta=0):
         """
@@ -65,9 +66,9 @@ class EarlyStopping:
                 self.early_stop = True
 
 
-
+# This function trains train the neural network defined above, using the dataset it is given
 def recommendNN(dataSet):
-
+    # convert the dataset as categorial indices for embedding vectors
     dataSet["userId"] = dataSet["userId"].astype("category").cat.codes
     dataSet["movieId"] = dataSet["movieId"].astype("category").cat.codes
     userAmount = dataSet["userId"].nunique()
@@ -76,14 +77,14 @@ def recommendNN(dataSet):
 
     embeddingVectorSize = 64
 
-
+    # Split the data up into a train test split
     X = dataSet[["userId", "movieId"]].values
     y = dataSet["rating"].values
-    # Train-test split
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
 
+    # Convert the data into the right format
     X_train_tensor = torch.tensor(X_train, dtype=torch.long)
     y_train_tensor = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1)
     datasetTrain = TensorDataset(X_train_tensor, y_train_tensor)
@@ -94,23 +95,14 @@ def recommendNN(dataSet):
     datasetTest = TensorDataset(X_test_tensor, y_test_tensor)
     loaderTest = DataLoader(datasetTest, batch_size=256, shuffle=False)
 
-    # 3. Initialize model, loss, optimizer
+
+    # Initialize model, loss, optimizer
     model = RatingPredictionNN(userAmount, movieAmount, embeddingVectorSize)
     criterion = nn.MSELoss()  # Mean Squared Error for regression
     optimizer = optim.Adam(model.parameters(), lr=0.001)
 
-    # 4. Training loop
+    # Training loop
     n_epochs = 1000
-    # for epoch in range(n_epochs):
-    #     model.train()
-    #     for xb, yb in loaderTrain:
-    #         optimizer.zero_grad()
-    #         preds = model(xb)
-    #         loss = criterion(preds, yb)
-    #         loss.backward()
-    #         optimizer.step()
-    #     if (epoch+1) % 1 == 0:
-    #         print(f"Epoch {epoch+1}, Loss: {loss.item():.4f}")
     early_stopping = EarlyStopping(patience=5, min_delta=0.0001)
     for epoch in range(n_epochs):
         model.train()
@@ -121,7 +113,7 @@ def recommendNN(dataSet):
             loss.backward()
             optimizer.step()
 
-        # Evaluate on validation / test set
+        # Evaluate on test set
         model.eval()
         rmse_sum = 0
         n_samples = 0
@@ -141,7 +133,7 @@ def recommendNN(dataSet):
             print(f"Early stopping triggered at epoch {epoch+1}")
             break
 
-    # 5. Test the model
+    # Test the model
 
     model.eval()  # set model to evaluation mode
     rmse_sum = 0
@@ -157,4 +149,5 @@ def recommendNN(dataSet):
 
     rmse = math.sqrt(rmse_sum / n_samples)
     print(f"RMSE on test set: {rmse:.4f}")
+
 
