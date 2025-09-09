@@ -15,6 +15,8 @@ def removeSparseData(data):
     moviesToKeep = movieCount[movieCount >= minAmountOfReviews].index
     filteredData = data[data['movieId'].isin(moviesToKeep)]
 
+    print("amount of ratings after filtering = ", filteredData.shape[0])
+
     return filteredData
 
 

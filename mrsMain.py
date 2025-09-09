@@ -5,19 +5,20 @@ import pandas as pd
 import sklearn
 import torch
 import numpy as np
+import math
 
-from scipy.sparse import csr_matrix
-
-from sklearn.decomposition import TruncatedSVD
-from sklearn.metrics import mean_squared_error
-from sklearn.model_selection import train_test_split
+# import torch.nn as nn
+# import torch.optim as optim
+# from torch.utils.data import DataLoader, TensorDataset
+# from sklearn.model_selection import train_test_split
+# from sklearn.metrics import mean_squared_error
 
 #import functions from other python files
 from dataPrepFunctions import graphScoresForOneMovie
 from dataPrepFunctions import rateMoviePolpularityRating, rateMoviePolpularityViews
 from dataPrepFunctions import MergeMoviesAndRatings
 from dataPrepFunctions import removeSparseData
-from knnRecommendation import testHello
+from neuralNetworkRecommendation import recommendNN
 
 movies = pd.read_csv('ml-latest-small/movies.csv')
 ratings = pd.read_csv('ml-latest-small/ratings.csv')
@@ -41,11 +42,14 @@ print(";;;;;;;;;;")
 
 movieId = 2
 
+user_movie_matrix = ratings.pivot(index='userId', columns='movieId', values='rating').fillna(0)
+print(type(user_movie_matrix))
+
 # Make a histogram of the ratings for the movie with movieId
 #graphScoresForOneMovie(movieId, ratings, movies.iloc[movieId-1, 1])
 
 # Make a panda structure ordering all the movies from most reviewed to least reviewed
-print(rateMoviePolpularityViews(ratings, movies))
+#print(rateMoviePolpularityViews(ratings, movies))
 
 # Make a panda structure ordering all the movies from best average review to worst average review
 #print(rateMoviePolpularityViews(ratings, movies))
@@ -68,6 +72,14 @@ print(rateMoviePolpularityViews(ratings, movies))
 
 dataSet = MergeMoviesAndRatings(movies, ratings)
 dataSet = removeSparseData(dataSet)
+
+print("***************************")
+print("***************************")
+print("NN time!")
+recommendNN(dataSet)
+
+
+
 
 
 
