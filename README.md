@@ -6,6 +6,9 @@ This project uses a neural network recommendation system that predicts movie rat
 - torch                    2.8.0
 - pandas                   2.3.2
 
+### How to run the code:
+Run the "mrsMain.py" file.
+
 
 ## Workflow
 ### Data Preprocessing
