@@ -1,5 +1,5 @@
 # Movie Recommendation System
-This project uses a neural network recommendation system that predicts movie ratings for users. This prject uses the small MovieLens dataset. The goal is to get an as low as possible **root mean squared error (RMSE)** between the predicted ratings and the actual ratings.
+This project uses a neural network recommendation system that predicts movie ratings for users. This project uses the small MovieLens dataset. The goal is to get an as low as possible **root mean squared error (RMSE)** between the predicted ratings and the actual ratings.
 
 ### Necessary packages to run this code:
 - scikit-learn             1.7.1
@@ -23,7 +23,7 @@ Before training the model some data exploration and preprocessing is done:
 ### Model
 The architecture of the model has the following properties:
 - Two embedding vectors are used to represent "userId" and "movieId", which are joined into a single input vector.
-- A fully connected neural network is used to find more complex interactions between users and movies than a simple linear model could.
+- A fully connected neural network is used to find more complex relation between users and movies than a simple linear model.
 - The output layer has one output neuron that will predict a single rating value.
 
 Different values for embedding vector size and different neural network configurations will be used to figure out the optimal architecture to predict movie ratings.
@@ -64,7 +64,8 @@ The Results for neural networks with an embedding vector size of 64 are:
 | 128-64-32                                | 0.9164 |
 
 ## Discussion and Future Research
-What can be seen in the tables is that there is not a lot of variation between the different neural networks and the embedding vector size. This is probably because a simple neural network is good enough to find all the connections between users and their tastes in movies. A more complex neural network would just find patterns in noise, which is why a smaller embedding vector with a simpler neural network performs slightly better.
+The tables show that there is not a lot of variation between the different neural networks and the embedding vector size. This is probably because a simple neural network is good enough to find all the connections between users and their tastes in movies. A more complex neural network would just find patterns in noise, which is why a smaller embedding vector with a simpler neural network performs slightly better.
+
 This dataset has an average rating of 3.53 and a standard deviation of 1.12. By guessing the average rating, the RMSE would be 1.12. So each neural network outperforms just guessing. 
 
 A possible way to improve the system is to feed more data into the neural network, information like movie genres and movie tags can be useful for making predictions.
