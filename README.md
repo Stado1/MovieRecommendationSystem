@@ -11,7 +11,7 @@ This project uses a neural network recommendation system that predicts movie rat
 ### Data Preprocessing
 Before training the model some data exploration and preprocessing is done:
 - Check if there are any duplicate movies or reviews.
-- Plot Histograms of ratings for given movies.
+- Plot histograms of ratings for given movies.
 - Rank movies based on popularity (most to least reviewed).
 - Rank movies based on rating (highest to lowest average rating).
 - Merge different CSV data files from the MovieLens dataset into a single Pandas dataframe.
@@ -28,7 +28,7 @@ Different values for embedding vector size and different neural network configur
 ### Training and Evaluation
 - The Adam optimizer was used with a learning rate of 0.001.
 - For the loss function mean squared error was used but for validation RMSE was used.
-- The batch size used was 256.
+- A batch size of 256 was used.
 - Early stopping was used to prevent overfitting.
 
 
