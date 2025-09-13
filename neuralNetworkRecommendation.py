@@ -19,13 +19,13 @@ class RatingPredictionNN(nn.Module):
         self.userEmbeding = nn.Embedding(userAmount, embeddingVectorSize)
         self.movieEmbeding = nn.Embedding(movieAmount, embeddingVectorSize)
 
-        self.fc1 = nn.Linear(embeddingVectorSize*2, 128)  # Input layer
+        self.fc1 = nn.Linear(embeddingVectorSize*2, 32)  # Input layer
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(128, 64)     # Hidden layer
+        self.fc2 = nn.Linear(32, 16)     # Hidden layer
         self.relu = nn.ReLU()
-        self.fc3 = nn.Linear(64, 32)     # Hidden layer
-        self.relu = nn.ReLU()
-        self.fc4 = nn.Linear(32, 1)     # Hidden layer
+        self.fc3 = nn.Linear(16, 1)     # Hidden layer
+        # self.relu = nn.ReLU()
+        # self.fc4 = nn.Linear(32, 1)     # Hidden layer
 
 
     def forward(self, x):
@@ -39,8 +39,8 @@ class RatingPredictionNN(nn.Module):
         x = self.fc2(x)
         x = self.relu(x)
         x = self.fc3(x)
-        x = self.relu(x)
-        x = self.fc4(x)
+        # x = self.relu(x)
+        # x = self.fc4(x)
         return x
 
 # class used for early stopping
@@ -75,13 +75,16 @@ def recommendNN(dataSet):
     movieAmount = dataSet["movieId"].nunique()
 
 
-    embeddingVectorSize = 64
+    embeddingVectorSize = 32
 
-    # Split the data up into a train test split
+    # Split the data up into a train eval and test split
     X = dataSet[["userId", "movieId"]].values
     y = dataSet["rating"].values
-    X_train, X_test, y_train, y_test = train_test_split(
+    X_train, X_eval, y_train, y_eval = train_test_split(
         X, y, test_size=0.2, random_state=42
+    )
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.25, random_state=42
     )
 
     # Convert the data into the right format
@@ -89,6 +92,11 @@ def recommendNN(dataSet):
     y_train_tensor = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1)
     datasetTrain = TensorDataset(X_train_tensor, y_train_tensor)
     loaderTrain = DataLoader(datasetTrain, batch_size=256, shuffle=True)
+
+    X_eval_tensor = torch.tensor(X_eval, dtype=torch.long)
+    y_eval_tensor = torch.tensor(y_eval, dtype=torch.float32).unsqueeze(1)
+    datasetEval = TensorDataset(X_eval_tensor, y_eval_tensor)
+    loaderEval = DataLoader(datasetEval, batch_size=256, shuffle=False)
 
     X_test_tensor = torch.tensor(X_test, dtype=torch.long)
     y_test_tensor = torch.tensor(y_test, dtype=torch.float32).unsqueeze(1)
@@ -113,12 +121,12 @@ def recommendNN(dataSet):
             loss.backward()
             optimizer.step()
 
-        # Evaluate on test set
+        # Evaluate on eval set
         model.eval()
         rmse_sum = 0
         n_samples = 0
         with torch.no_grad():
-            for xb, yb in loaderTest:
+            for xb, yb in loaderEval:
                 preds = model(xb)
                 mse = ((preds - yb) ** 2).sum().item()
                 rmse_sum += mse
